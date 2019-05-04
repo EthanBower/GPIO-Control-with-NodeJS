@@ -9,19 +9,19 @@ const express = require('express'),
     path = require('path'),
     ejsCall = require('./ejsCall.js'),
     mimeDictonary = { //Before stream is sent, the clients browser needs to know the type of data it recieves on the header
-          '.ico': 'image/x-icon',
           '.html': 'text/html',
-          '.js': 'text/javascript',
-          '.json': 'application/json',
           '.css': 'text/css',
+          '.js': 'text/javascript',
           '.png': 'image/png',
           '.jpg': 'image/jpeg',
-          '.wav': 'audio/wav',
-          '.mp3': 'audio/mpeg',
+          '.json': 'application/json',
           '.svg': 'image/svg+xml',
           '.pdf': 'application/pdf',
           '.doc': 'application/msword',
           '.eot': 'appliaction/vnd.ms-fontobject',
+          '.ico': 'image/x-icon',
+          '.wav': 'audio/wav',
+          '.mp3': 'audio/mpeg',
           '.ttf': 'aplication/font-sfnt'
       };
 
@@ -31,6 +31,14 @@ class Server {
         this.port = serverPort;
         this.baseDir = baseDir;
         this.filetofind = filetofind;
+    }
+    
+    cleanup(servr) { // When cntrl + c is pressed, it will safly close the port(s)
+        process.on('SIGINT', function () {
+            servr.close(function () {
+                    console.log(`\nServer on port ${this.port} closed!`);
+            }.bind({port: this.port}));
+        }.bind({servr: servr, port: this.port}));
     }
     
     listeners() { //These are custom listeners for POST requests. Add/take as needed.
@@ -60,14 +68,15 @@ class Server {
     }
     
     startServer() {
-        this.listeners();
         app.set("view engine", "ejs"); //Use ejs as markup
-        app.set("views", __dirname + '/Websites/dank'); //Don't use defualt views folder
+        app.set("views", __dirname + this.baseDir); //Don't use defualt views folder
 
-        app.get('/*', function(req, res) { //Listen for any GET request.
+        var servr = app.listen(this.port, () => console.log(`Server is now listening on port ${this.port}!`));
+        
+        app.get('/*', (req, res) => { //Listen for any GET request.
             var fullpath = path.join(__dirname, this.baseDir + req.originalUrl); //Generate a full path to the requested file
-
-            fs.exists(fullpath, function (exist) { //Check if the requested path exists
+            
+            fs.exists(fullpath, (exist) => { //Check if the requested path exists
                 if (!exist) { // if the file does not exist, return 404
                     res.statusCode = 404;
                     res.end(`File ${req.originalUrl} not found.`);
@@ -100,10 +109,11 @@ class Server {
                 } else { //If file is type .ejs, then call function from 'ejsCall.js'
                     ejsCall.ejsFilePath(fullpath, res, parsed_path.dir);
                 }
-            }.bind({baseDir: this.baseDir, res: res, filetofind: this.filetofind}));
-        }.bind({baseDir: this.baseDir, filetofind: this.filetofind}));
-        
-        app.listen(this.port, () => console.log(`Server is now listening on port ${this.port}!`));
+            });
+        });
+
+        this.listeners(); //Set up special listeners
+        this.cleanup(servr); //Set up listener for ctrl+c action
     }
 }
 
