@@ -8,11 +8,17 @@
         <link rel="stylesheet" href="index.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
+    <body onload="scale()" onresize="scale()">
         <div>
             <div class="Title_div">
-                <p class="Title_text">GPIO Configuration:</p>
+                <p class="Title_text">
+                        GPIO Configuration<br><br>
+                        Key: Blue=Cannot Change GPIO State, Red=GPIO Pin Off, Green=GPIO Pin On
+                </p>
             </div>
+        </div>
+        <div>
+                
         </div>
         <%- gpioblocks%>
         <form action="/allGPIOon" method="post">
@@ -22,4 +28,5 @@
                 <button type="submit" value="Submit">Turn all GPIO off</button>
         </form>
     </body>
+    <script src="index.js"></script>
 </html>

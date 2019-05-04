@@ -3,11 +3,39 @@
 html {
     text-align: center;
     width: 100%;
-    background: #b7b7b7;
+    background: #dedede;
 }
 
 body {
     margin-top: 0px;
+}
+
+.button_on, .button_off {
+    border: none;
+    color: white;
+    width: 100%;
+    text-align: center;
+    opacity: 0.75;
+    transition: 0.3s;
+    display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    transition: 0.2s;
+}
+
+.button_on {
+    background-color: #9e1818;
+}
+
+.button_off {
+    background-color: #1f8c1f;
+}
+
+button:hover {
+    opacity: 1;
 }
 
 .Title_div {
@@ -60,6 +88,7 @@ block {
 .GPIO_text, .GPIO_text_blue {
     padding: 20px;
     width: 55px;
+    color: white;
 }
 
 .GPIO_text_blue {
