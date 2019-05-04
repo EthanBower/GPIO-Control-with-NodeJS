@@ -44,23 +44,23 @@ class Gpio {
                         gpioblocks = "<div style='display: block'>" + gpioblocks + "</div>";
                     }
                     
-                    if (gpioDict[i + 1] == "no") {
+                    if (gpioDict[i + 1] == "no") { //if current GPIO cannot be turned off/on
                         gpioblocks += "<div class='GPIO_rect_blue'>";
                         gpioblocks += "<p class='GPIO_text_blue'>GPIO Pin: " + (i + 1) + "</p></div>";
-                    } else if (pythonData[dataIteration] == '0') {
+                    } else if (pythonData[dataIteration] == '0') { //if current GPIO pin is off
                         gpioblocks += "<form action='/gpionum" + (i + 1) + "' method='post' class='gpiobuttons'>";
                         gpioblocks += "<div class='GPIO_rect_red'>";
-                        gpioblocks += "<p class='GPIO_text'>GPIO Pin: " + (i + 1) + "</p><button type='submit' value='Submit'>Turn Pin On/Off</button></div></form>";
+                        gpioblocks += "<p class='GPIO_text'>GPIO Pin: " + (i + 1) + "</p><button class='button_off' type='submit' value='Submit'>Turn Pin On</button></div></form>";
                         dataIteration += 3;
-                    } else if (pythonData[dataIteration] == '1') {
+                    } else if (pythonData[dataIteration] == '1') { //iuf current GPIO pin is on
                         gpioblocks += "<form action='/gpionum" + (i + 1) + "' method='post' class='gpiobuttons'>";
                         gpioblocks += "<div class='GPIO_rect_green'>";
-                        gpioblocks += "<p class='GPIO_text'>GPIO Pin: " + (i + 1) + "</p><button type='submit' value='Submit'>Turn Pin On/Off</button></div></form>";
+                        gpioblocks += "<p class='GPIO_text'>GPIO Pin: " + (i + 1) + "</p><button class='button_on' type='submit' value='Submit'>Turn Pin Off</button></div></form>";
                         dataIteration += 3;
                     }
                 }
             } else {
-                gpioblocks = "Cannot get GPIO statuses. Try refreshing.";
+                gpioblocks = "Cannot get status of GPIO. Try refreshing.";
             }
 
             res.render(req_fullpath,{gpioblocks: gpioblocks});
